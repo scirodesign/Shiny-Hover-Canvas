@@ -1,8 +1,14 @@
 /*
 *
+<<<<<<< HEAD
 * shiny logo
 *
 * EZ One step shiny logo made by @Scirodesign
+=======
+* Shiny Hover Canvas
+*
+* EZ Shiny Canvas Hover Shine made by @Scirodesign for images
+>>>>>>> origin/master
 *
 * OPTIONS:
 * -
