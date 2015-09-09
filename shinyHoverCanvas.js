@@ -9,6 +9,7 @@
 *
 * EZ Shiny Canvas Hover Shine made by @Scirodesign for images
 >>>>>>> origin/master
+STILL UNDER DEV!
 *
 * OPTIONS:
 * -
@@ -31,6 +32,7 @@ $.fn.shinylogo = function(options){
 		topOffset : 0,
 		speed : 2000,
 		angle : 0,
+		easing : "swing",
 		doubleShine : true,
 		queueStop : true,
 		direction : "right",
@@ -100,11 +102,12 @@ function sg_canvasInitializeReplace(elemObject,elemToReplace){
 
 
 function sl_gradient(elemObject){
-	this.x = 0;
-	this.y = 0;
+
 
 	this.redrawLogo = function(ctx, x, y, x1, y2, color, imgPassedIn, w, h){
 
+		ctx.clearRect(0, 0, w, h);
+		ctx.fillRect(0, 0, w, h);
 
 		var img=imgPassedIn;
    		ctx.drawImage(img,0,0);
@@ -112,8 +115,7 @@ function sl_gradient(elemObject){
 
 	};
 	this.gradientMove = function(ctx, x, y, x1, y2, color, imgPassedIn, w, h){
-		//ctx.fillStyle() = color;
-		//ctx.fillRect(x,y,w,h);
+
 
 		ctx.clearRect(0, 0, w, h);
 		ctx.fillRect(0, 0, w, h);
@@ -136,7 +138,7 @@ function sl_gradient(elemObject){
        	ctx.fillStyle = grd;
       	ctx.fill();
 
-		ctx.globalCompositeOperation="destination-atop";
+				ctx.globalCompositeOperation="destination-atop";
 
 
 	};
@@ -146,11 +148,25 @@ function sl_gradient(elemObject){
 
 function sl_hovered(evt, elemObject){
 	var direction = "0";
+	var gradientX = -elemObject.dimensions.width;
 
 	if(elemObject.timerSafetyNet != null){
 		clearTimeout(elemObject.timerSafetyNet);
 		elemObject.timerSafetyNet = null;
 	}
+	elemObject.timerSafetyNet = setTimeout(function(){
+		elemObject.gradient.gradientMove(
+			elemObject.c.ctx,
+			-elemObject.dimensions.width * 2,
+			elemObject.dimensions.height,
+			-elemObject.dimensions.width,
+			elemObject.dimensions.height,
+			null,
+			elemObject.c.img,
+			elemObject.dimensions.width,
+			elemObject.dimensions.height
+			);
+	},opts.speed + 50);
 
 	if(opts.direction != "right"){
 		direction = -1;
@@ -160,24 +176,10 @@ function sl_hovered(evt, elemObject){
 		jQuery(elemObject.c.canvas).off();
 	}
 
-	var gradientX = (elemObject.dimensions.width * 2)  * -1;
 
-	elemObject.timerSafetyNet = setTimeout(function(){
-		elemObject.gradient.gradientMove(
-			elemObject.c.ctx,
-			-elemObject.dimensions.width * 2,
-			elemObject.dimensions.height,
-			-elemObject.dimensions.width,
-			elemObject.dimensions.height + opts.angle,
-			null,
-			elemObject.c.img,
-			elemObject.dimensions.width,
-			elemObject.dimensions.height);
-			console.log("finished")
-	},opts.speed);
-
-	jQuery({ gradientX: (elemObject.dimensions.width * 2)  * -1 }).stop(true,true).animate({ gradientX: elemObject.dimensions.width * 2}, {
-    	duration:opts.speed,
+	jQuery({ gradientX: -elemObject.dimensions.width}).clearQueue("fx").animate({ gradientX: elemObject.dimensions.width}, {
+    	duration: opts.speed,
+			easing : opts.easing,
     	step: function(now, fx) {
         	elemObject.gradient.gradientMove(
 						elemObject.c.ctx,
