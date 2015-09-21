@@ -177,7 +177,7 @@ function sl_hovered(evt, elemObject){
 	}
 
 
-	jQuery({ gradientX: -elemObject.dimensions.width}).clearQueue("fx").animate({ gradientX: elemObject.dimensions.width}, {
+	jQuery({ gradientX: -elemObject.dimensions.width - opts.leftOffset}).clearQueue("fx").animate({ gradientX: elemObject.dimensions.width}, {
     	duration: opts.speed,
 			easing : opts.easing,
     	step: function(now, fx) {
